@@ -11,7 +11,7 @@ data = ''
 startTime = 0
 endTime = 0
 timeFlag = 0
-path = "/home/pi/Desktop/"
+path = "/home/nathan41/Desktop/"
 language = "English"
 languagePriority = 0
 
