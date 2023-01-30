@@ -90,7 +90,7 @@ def escapeRoomThread():
             deadAudio.play()
 
         elif language == 'Dutch':
-            deadAudio = pygame.mixer.Sound(path + language + "/Escape room Nathan Dead (NL) FINAL.mp3")
+            deadAudio = pygame.mixer.Sound(path + language + "/Escape room Nathan Dood (NL) FINAL.mp3")
             deadAudio.play()
 
     if GPIO.input(escapeRoom) == 1:
