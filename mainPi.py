@@ -59,7 +59,7 @@ def selectEnglishThread(thread=None):
 
     if GPIO.input(selectEnglishLanguage) == 0:
         languagePriority = 0
-        GPIO.add_event_detect(selectDutchLanguage, GPIO.RISING, callback=selectDutchThread, bouncetime=1000)
+        GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=1000)
 
     print(language)
 
@@ -74,7 +74,7 @@ def selectDutchThread(thread=None):
 
     if GPIO.input(selectDutchLanguage) == 0:
         languagePriority = 0
-        GPIO.add_event_detect(selectEnglishLanguage, GPIO.RISING, callback=selectEnglishThread, bouncetime=1000)
+        GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=1000)
 
     print(language)
 
