@@ -92,6 +92,7 @@ def escapeRoomThread(thread=None):
             deadAudio.play()
 
     if GPIO.input(escapeRoom) == 1:
+        print("Escape Room Started")
         threading.Timer(3600, deadThread).start()
 
         if language == 'English':
@@ -107,6 +108,7 @@ def startThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(start) == 1:
+        print("All Systems Repaired")
         pygame.mixer.music.pause()
 
         if powerAudio != '':
@@ -136,6 +138,7 @@ def powerThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(power) == 1:
+        print("Power Repaired")
         pygame.mixer.music.pause()
 
         if startAudio != '':
@@ -165,6 +168,7 @@ def lifeSupportThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(lifeSupport) == 1:
+        print("Life Support Repaired")
         pygame.mixer.music.pause()
 
         if startAudio != '':
@@ -194,6 +198,7 @@ def engineThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(engine) == 1:
+        print("Engine Repaired")
         pygame.mixer.music.pause()
 
         if startAudio != '':
@@ -223,6 +228,7 @@ def navigationThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(navigation) == 1:
+        print("Navigation Repaired")
         pygame.mixer.music.pause()
 
         if startAudio != '':
