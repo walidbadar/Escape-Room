@@ -10,5 +10,5 @@
 <li>pydub</li>
 </ul>
 
-<div class="snippet-clipboard-content notranslate position-relative overflow-auto" data-snippet-clipboard-copy-content="sudo pip3 install numpy, pygame, sounddevice, soundfile, pydub"><pre class="notranslate"><code>sudo pip3 install numpy, pygame, sounddevice, soundfile, pydub</code></pre></div>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto" data-snippet-clipboard-copy-content="pip3 install numpy, pygame, sounddevice, soundfile, pydub"><pre class="notranslate"><code>pip3 install numpy, pygame, sounddevice, soundfile, pydub</code></pre></div>
 <div class="snippet-clipboard-content notranslate position-relative overflow-auto" data-snippet-clipboard-copy-content="sudo apt-get install libportaudio2"><pre class="notranslate"><code>sudo apt-get install libportaudio2</code></pre></div>
