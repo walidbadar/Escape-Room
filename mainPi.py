@@ -218,7 +218,7 @@ def engineThread():
         pygame.mixer.music.unpause()
 
 
-def naviagationThread():
+def navigationThread():
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(navigation) == 1:
