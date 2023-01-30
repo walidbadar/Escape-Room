@@ -42,6 +42,7 @@ def setup():
     GPIO.cleanup()
     GPIO.setup(selectEnglishLanguage, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(selectDutchLanguage, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(escapeRoom, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(start, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(power, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(lifeSupport, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -257,6 +258,7 @@ def navigationThread(thread=None):
 def loop():
     GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=1000)
     GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=1000)
+    GPIO.add_event_detect(escapeRoom, GPIO.RISING, callback=escapeRoomThread, bouncetime=1000)
     GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=1000)
     GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=1000)
     GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=1000)
