@@ -49,14 +49,13 @@ def setup():
     GPIO.setup(navigation, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 
-def selectEnglishThread():
+def selectEnglishThread(thread=None):
     global language, languagePriority
-
-    GPIO.remove_event_detect(selectDutchLanguage)
 
     if GPIO.input(selectEnglishLanguage) == 1 and languagePriority == 0:
         language = 'English'
         languagePriority = 1
+        GPIO.remove_event_detect(selectDutchLanguage)
 
     if GPIO.input(selectEnglishLanguage) == 0:
         languagePriority = 0
@@ -65,14 +64,13 @@ def selectEnglishThread():
     print(language)
 
 
-def selectDutchThread():
+def selectDutchThread(thread=None):
     global language, languagePriority
-
-    GPIO.remove_event_detect(selectEnglishLanguage)
 
     if GPIO.input(selectDutchLanguage) == 1 and languagePriority == 0:
         language = 'Dutch'
         languagePriority = 1
+        GPIO.remove_event_detect(selectEnglishLanguage)
 
     if GPIO.input(selectDutchLanguage) == 0:
         languagePriority = 0
@@ -81,7 +79,7 @@ def selectDutchThread():
     print(language)
 
 
-def escapeRoomThread():
+def escapeRoomThread(thread=None):
     global startTime, endTime, timeFlag
 
     def deadThread():
@@ -105,7 +103,7 @@ def escapeRoomThread():
         pygame.mixer.music.play()
 
 
-def startThread():
+def startThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(start) == 1:
@@ -134,7 +132,7 @@ def startThread():
         pygame.mixer.music.unpause()
 
 
-def powerThread():
+def powerThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(power) == 1:
@@ -163,7 +161,7 @@ def powerThread():
         pygame.mixer.music.unpause()
 
 
-def lifeSupportThread():
+def lifeSupportThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(lifeSupport) == 1:
@@ -192,7 +190,7 @@ def lifeSupportThread():
         pygame.mixer.music.unpause()
 
 
-def engineThread():
+def engineThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(engine) == 1:
@@ -221,7 +219,7 @@ def engineThread():
         pygame.mixer.music.unpause()
 
 
-def navigationThread():
+def navigationThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(navigation) == 1:
@@ -251,8 +249,8 @@ def navigationThread():
 
 
 def loop():
-    GPIO.add_event_detect(selectEnglishLanguage, GPIO.RISING, callback=selectEnglishThread, bouncetime=1000)
-    GPIO.add_event_detect(selectDutchLanguage, GPIO.RISING, callback=selectDutchThread, bouncetime=1000)
+    GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=1000)
+    GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=1000)
     GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=1000)
     GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=1000)
     GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=1000)
