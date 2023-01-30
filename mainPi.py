@@ -84,15 +84,17 @@ def selectDutchThread():
 def escapeRoomThread():
     global startTime, endTime, timeFlag
 
+    def deadThread():
+        if language == 'English':
+            deadAudio = pygame.mixer.Sound(path + language + "/Escape room Nathan Dead (Engels) FINAL.mp3")
+            deadAudio.play()
+
+        elif language == 'Dutch':
+            deadAudio = pygame.mixer.Sound(path + language + "/Escape room Nathan Dead (NL) FINAL.mp3")
+            deadAudio.play()
+
     if GPIO.input(escapeRoom) == 1:
-        if timeFlag == 0:
-            startTime = int(time.time())
-
-        if timeFlag == 1:
-            endTime = int(time.time())
-            timeFlag = 0
-
-        timeFlag = timeFlag + 1
+        threading.Timer(3600, deadThread).start()
 
         if language == 'English':
             pygame.mixer.music.load(path + language + "/Escape room Nathan (ENGELS) FINAL.mp3")
@@ -106,7 +108,7 @@ def escapeRoomThread():
 def startThread():
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
-    if data == b'20':
+    if GPIO.input(start) == 1:
         pygame.mixer.music.pause()
 
         if powerAudio != '':
@@ -133,8 +135,9 @@ def startThread():
 
 
 def powerThread():
+    global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
+
     if GPIO.input(power) == 1:
-        global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
         pygame.mixer.music.pause()
 
         if startAudio != '':
