@@ -264,7 +264,7 @@ def loop():
 if __name__ == '__main__':
     setup()
     try:
-        loop()
         print("Program Started")
+        loop()
     except:
         GPIO.cleanup()
