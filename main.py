@@ -4,6 +4,7 @@ import RPi.GPIO as GPIO
 import pygame
 import datetime as dt
 import vlc
+from pydub import AudioSegment
 
 pygame.init()
 pygame.mixer.init()
@@ -92,7 +93,7 @@ def escapeRoomThread(thread=None):
             pygame.mixer.music.stop()
             deadAudioMP3 = path + language + "/Escape room Nathan Dead (Engels) FINAL.mp3"
             deadAudio = vlc.MediaPlayer(deadAudioMP3)
-            deadAudioLen = pygame.mixer.Sound(deadAudioMP3).get_length()
+            deadAudioLen = len(AudioSegment.from_file(deadAudioMP3, format="mp3"))/1000/1000
             deadAudio.play()
             time.sleep(deadAudioLen)
 
@@ -100,7 +101,7 @@ def escapeRoomThread(thread=None):
             pygame.mixer.music.stop()
             deadAudioMP3 = path + language + "/Escape room Nathan Dood (NL) FINAL.mp3"
             deadAudio = vlc.MediaPlayer(deadAudioMP3)
-            deadAudioLen = pygame.mixer.Sound(deadAudioMP3).get_length()
+            deadAudioLen = len(AudioSegment.from_file(deadAudioMP3, format="mp3"))/1000/1000
             deadAudio.play()
             time.sleep(deadAudioLen)
 
@@ -139,14 +140,15 @@ def startThread(thread=None):
         if language == 'English':
             startAudioMP3 = path + language + "/All Systems Repaired (Engels) FINAL.mp3"
             startAudio = vlc.MediaPlayer(startAudioMP3)
-            startAudioLen = pygame.mixer.Sound(startAudioMP3).get_length()
+            startAudioLen = len(AudioSegment.from_file(startAudioMP3, format="mp3"))/1000
 
         elif language == 'Dutch':
             startAudioMP3 = path + language + "/Alles gerepareerd (NL) FINAL.mp3"
             startAudio = vlc.MediaPlayer(startAudioMP3)
-            startAudioLen = pygame.mixer.Sound(startAudioMP3).get_length()
+            startAudioLen = len(AudioSegment.from_file(startAudioMP3, format="mp3"))/1000
 
         startAudio.play()
+        print(startAudioLen)
         time.sleep(startAudioLen)
         pygame.mixer.music.unpause()
 
@@ -173,14 +175,15 @@ def powerThread(thread=None):
         if language == 'English':
             powerAudioMP3 = path + language + "/Power Repaired (Engels) FINAL.mp3"
             powerAudio = vlc.MediaPlayer(powerAudioMP3)
-            powerAudioLen = pygame.mixer.Sound(powerAudioMP3).get_length()
+            powerAudioLen = len(AudioSegment.from_file(powerAudioMP3, format="mp3"))/1000
 
         elif language == 'Dutch':
             powerAudioMP3 = path + language + "/Stroom gerepareerd (NL) FINAL.mp3"
             powerAudio = vlc.MediaPlayer(powerAudioMP3)
-            powerAudioLen = pygame.mixer.Sound(powerAudioMP3).get_length()
+            powerAudioLen = len(AudioSegment.from_file(powerAudioMP3, format="mp3"))/1000
 
         powerAudio.play()
+        print(powerAudioLen)
         time.sleep(powerAudioLen)
         pygame.mixer.music.unpause()
 
@@ -207,14 +210,15 @@ def lifeSupportThread(thread=None):
         if language == 'English':
             lifeSupportAudioMP3 = path + language + "/Life Support Repaired (Engels) FINAL.mp3"
             lifeSupportAudio = vlc.MediaPlayer(lifeSupportAudioMP3)
-            lifeSupportAudioLen = pygame.mixer.Sound(lifeSupportAudioMP3).get_length()
+            lifeSupportAudioLen = len(AudioSegment.from_file(lifeSupportAudioMP3, format="mp3"))/1000
 
         elif language == 'Dutch':
             lifeSupportAudioMP3 = path + language + "/Zuurstof gerepareerd (NL) FINAL.mp3"
             lifeSupportAudio = vlc.MediaPlayer(lifeSupportAudioMP3)
-            lifeSupportAudioLen = pygame.mixer.Sound(lifeSupportAudioMP3).get_length()
+            lifeSupportAudioLen = len(AudioSegment.from_file(lifeSupportAudioMP3, format="mp3"))/1000
 
         lifeSupportAudio.play()
+        print(lifeSupportAudioLen)
         time.sleep(lifeSupportAudioLen)
         pygame.mixer.music.unpause()
 
@@ -241,14 +245,15 @@ def engineThread(thread=None):
         if language == 'English':
             engineAudioMP3 = vlc.MediaPlayer(path + language + "/Engines  Repaired (Engels) FINAL.mp3")
             engineAudio = vlc.MediaPlayer(engineAudioMP3)
-            engineAudioLen = pygame.mixer.Sound(engineAudioMP3).get_length()
+            engineAudioLen = len(AudioSegment.from_file(engineAudioMP3, format="mp3"))/1000
 
         elif language == 'Dutch':
             engineAudioMP3 = path + language + "/Motoren gerepareerd (NL) FINAL.mp3"
             engineAudio = vlc.MediaPlayer(engineAudioMP3)
-            engineAudioLen = pygame.mixer.Sound(engineAudioMP3).get_length()
+            engineAudioLen = len(AudioSegment.from_file(engineAudioMP3, format="mp3"))/1000
 
         engineAudio.play()
+        print(engineAudioLen)
         time.sleep(engineAudioLen)
         pygame.mixer.music.unpause()
 
@@ -275,14 +280,15 @@ def navigationThread(thread=None):
         if language == 'English':
             navigationAudioMP3 = vlc.MediaPlayer(path + language + "/Navigation Repaired (Engels) FINAL.mp3")
             navigationAudio = vlc.MediaPlayer(navigationAudioMP3)
-            navigationAudioLen = pygame.mixer.Sound(navigationAudioMP3).get_length()
+            navigationAudioLen = len(AudioSegment.from_file(navigationAudioMP3, format="mp3"))/1000
 
         elif language == 'Dutch':
             navigationAudioMP3 = path + language + "/Navigatie gerepareerd (NL) FINAL.mp3"
             navigationAudio = vlc.MediaPlayer(navigationAudioMP3)
-            navigationAudioLen = pygame.mixer.Sound(navigationAudioMP3).get_length()
+            navigationAudioLen = len(AudioSegment.from_file(navigationAudioMP3, format="mp3"))/1000
 
         navigationAudio.play()
+        print(navigationAudioLen)
         time.sleep(navigationAudioLen)
         pygame.mixer.music.unpause()
 
