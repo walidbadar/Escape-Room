@@ -243,7 +243,7 @@ def engineThread(thread=None):
             navigationAudio.stop()
 
         if language == 'English':
-            engineAudioMP3 = vlc.MediaPlayer(path + language + "/Engines  Repaired (Engels) FINAL.mp3")
+            engineAudioMP3 = path + language + "/Engines  Repaired (Engels) FINAL.mp3"
             engineAudio = vlc.MediaPlayer(engineAudioMP3)
             engineAudioLen = len(AudioSegment.from_file(engineAudioMP3, format="mp3"))/1000
 
