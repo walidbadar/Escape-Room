@@ -5,7 +5,6 @@ import pygame
 import datetime as dt
 import vlc
 from pydub import AudioSegment
-from pydub.playback import play
 
 pygame.init()
 pygame.mixer.init()
@@ -151,6 +150,7 @@ def startThread(thread=None):
         startAudio = play(startAudioFile)
         print(startAudioLen)
         time.sleep(startAudioLen)
+        startAudio = ''
         pygame.mixer.music.unpause()
 
 
@@ -186,6 +186,7 @@ def powerThread(thread=None):
         powerAudio = play(powerAudioFile)
         print(powerAudioLen)
         time.sleep(powerAudioLen)
+        powerAudio = ''
         pygame.mixer.music.unpause()
 
 
@@ -221,6 +222,7 @@ def lifeSupportThread(thread=None):
         lifeSupportAudio = play(lifeSupportAudioFile)
         print(lifeSupportAudioLen)
         time.sleep(lifeSupportAudioLen)
+        lifeSupportAudio = ''
         pygame.mixer.music.unpause()
 
 
@@ -256,6 +258,7 @@ def engineThread(thread=None):
         engineAudio = play(engineAudioFile)
         print(engineAudioLen)
         time.sleep(engineAudioLen)
+        engineAudio = ''
         pygame.mixer.music.unpause()
 
 
@@ -291,6 +294,7 @@ def navigationThread(thread=None):
         navigationAudio = play(navigationAudioFile)
         print(navigationAudioLen)
         time.sleep(navigationAudioLen)
+        navigationAudio = ''
         pygame.mixer.music.unpause()
 
 
