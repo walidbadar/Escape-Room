@@ -63,7 +63,7 @@ def selectEnglishThread(thread=None):
         languagePriority = 1
         GPIO.remove_event_detect(selectDutchLanguage)
 
-    if GPIO.input(selectEnglishLanguage) == 0 and languagePriority == 1:
+    elif GPIO.input(selectEnglishLanguage) == 0 and languagePriority == 1:
         pygame.mixer.music.stop()
         languagePriority = 0
         GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
@@ -79,7 +79,7 @@ def selectDutchThread(thread=None):
         languagePriority = 1
         GPIO.remove_event_detect(selectEnglishLanguage)
 
-    if GPIO.input(selectDutchLanguage) == 0 and languagePriority == 1:
+    elif GPIO.input(selectDutchLanguage) == 0 and languagePriority == 1:
         pygame.mixer.music.stop()
         languagePriority = 0
         GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
