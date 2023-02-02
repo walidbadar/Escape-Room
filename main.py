@@ -5,6 +5,7 @@ import pygame
 import datetime as dt
 import vlc
 from pydub import AudioSegment
+from pydub.playback import play
 
 pygame.init()
 pygame.mixer.init()
@@ -244,12 +245,12 @@ def engineThread(thread=None):
 
         if language == 'English':
             engineAudioMP3 = path + language + "/Engines  Repaired (Engels) FINAL.mp3"
-            engineAudioFile = AudioSegment.from_file(engineAudioMP3)
+            engineAudioFile = AudioSegment.from_file(engineAudioMP3, format="mp3")
             engineAudioLen = len(engineAudioFile)/1000
 
         elif language == 'Dutch':
             engineAudioMP3 = path + language + "/Motoren gerepareerd (NL) FINAL.mp3"
-            engineAudioFile = AudioSegment.from_file(engineAudioMP3)
+            engineAudioFile = AudioSegment.from_file(engineAudioMP3, format="mp3")
             engineAudioLen = len(engineAudioFile)/1000
 
         engineAudio = play(engineAudioFile)
