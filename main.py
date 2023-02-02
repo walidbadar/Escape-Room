@@ -17,6 +17,7 @@ timeFlag = 0
 path = "/home/nathan41/Desktop/"
 language = "English"
 languagePriority = 0
+buttonDelay = 3000
 
 # Audio Varaibles
 escapeRoomAudio = ''
@@ -65,7 +66,7 @@ def selectEnglishThread(thread=None):
     if GPIO.input(selectEnglishLanguage) == 0 and languagePriority == 1:
         pygame.mixer.music.stop()
         languagePriority = 0
-        GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=1000)
+        GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
 
     print(language)
 
@@ -81,7 +82,7 @@ def selectDutchThread(thread=None):
     if GPIO.input(selectDutchLanguage) == 0 and languagePriority == 1:
         pygame.mixer.music.stop()
         languagePriority = 0
-        GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=1000)
+        GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
 
     print(language)
 
@@ -300,14 +301,14 @@ def navigationThread(thread=None):
 
 
 def loop():
-    GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=1000)
-    GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=1000)
-    GPIO.add_event_detect(escapeRoom, GPIO.RISING, callback=escapeRoomThread, bouncetime=1000)
-    GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=1000)
-    GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=1000)
-    GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=1000)
-    GPIO.add_event_detect(engine, GPIO.RISING, callback=engineThread, bouncetime=1000)
-    GPIO.add_event_detect(navigation, GPIO.RISING, callback=navigationThread, bouncetime=1000)
+    GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(escapeRoom, GPIO.RISING, callback=escapeRoomThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(engine, GPIO.RISING, callback=engineThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(navigation, GPIO.RISING, callback=navigationThread, bouncetime=buttonDelay)
 
     while True:
         pass  # Don't do anything, sit forever
