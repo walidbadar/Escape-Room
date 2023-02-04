@@ -2,8 +2,6 @@ import os, subprocess, threading, time
 import RPi.GPIO as GPIO
 # import OPi.GPIO as GPIO
 import pygame
-import datetime as dt
-import vlc
 from pydub import AudioSegment
 from pydub.playback import play
 
@@ -16,7 +14,6 @@ endTime = 0
 timeFlag = 0
 path = "/home/nathan41/Desktop/"
 language = "English"
-languagePriority = 0
 buttonDelay = 3000
 deadTimer = ''
 
@@ -56,20 +53,18 @@ def setup():
 
 
 def selectEnglishThread(thread=None):
-    global language, languagePriority, deadTimer
+    global language, deadTimer
 
     GPIO.remove_event_detect(selectEnglishLanguage)
 
-    if GPIO.input(selectEnglishLanguage) == 1 and languagePriority == 0:
+    if GPIO.input(selectEnglishLanguage) == 1:
         language = 'English'
-        languagePriority = 1
         GPIO.remove_event_detect(selectDutchLanguage)
 
-    elif GPIO.input(selectEnglishLanguage) == 0 and languagePriority == 1:
+    elif GPIO.input(selectEnglishLanguage) == 0:
         pygame.mixer.music.stop()
         if deadTimer != '':
             deadTimer.cancel()
-        languagePriority = 0
         GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
 
     GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
@@ -77,20 +72,18 @@ def selectEnglishThread(thread=None):
 
 
 def selectDutchThread(thread=None):
-    global language, languagePriority, deadTimer
+    global language, deadTimer
 
     GPIO.remove_event_detect(selectDutchLanguage)
 
-    if GPIO.input(selectDutchLanguage) == 1 and languagePriority == 0:
+    if GPIO.input(selectDutchLanguage) == 1:
         language = 'Dutch'
-        languagePriority = 1
         GPIO.remove_event_detect(selectEnglishLanguage)
 
-    elif GPIO.input(selectDutchLanguage) == 0 and languagePriority == 1:
+    elif GPIO.input(selectDutchLanguage) == 0:
         pygame.mixer.music.stop()
         if deadTimer != '':
             deadTimer.cancel()
-        languagePriority = 0
         GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
 
     GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
@@ -105,16 +98,16 @@ def escapeRoomThread(thread=None):
     def deadThread():
         if language == 'English':
             pygame.mixer.music.stop()
-            deadAudioMP3 = path + language + "/Escape room Nathan Dead (Engels) FINAL." + audioFormat
-            deadAudioFile = AudioSegment.from_file(deadAudioMP3, format=audioFormat)
+            deadAudioFormat = path + language + "/Escape room Nathan Dead (Engels) FINAL." + audioFormat
+            deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
             deadAudioLen = len(deadAudioFile)/1000
             deadAudio = play(deadAudioFile)
             time.sleep(deadAudioLen)
 
         elif language == 'Dutch':
             pygame.mixer.music.stop()
-            deadAudioMP3 = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
-            deadAudioFile = AudioSegment.from_file(deadAudioMP3, format=audioFormat)
+            deadAudioFormat = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
+            deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
             deadAudioLen = len(deadAudioFile)/1000
             deadAudio = play(deadAudioFile)
             time.sleep(deadAudioLen)
@@ -157,13 +150,13 @@ def startThread(thread=None):
             navigationAudio.stop()
 
         if language == 'English':
-            startAudioMP3 = path + language + "/All Systems Repaired (Engels) FINAL." + audioFormat
-            startAudioFile = AudioSegment.from_file(startAudioMP3, format=audioFormat)
+            startAudioFormat = path + language + "/All Systems Repaired (Engels) FINAL." + audioFormat
+            startAudioFile = AudioSegment.from_wav(startAudioFormat)
             startAudioLen = len(startAudioFile)/1000
 
         elif language == 'Dutch':
-            startAudioMP3 = path + language + "/Alles gerepareerd (NL) FINAL." + audioFormat
-            startAudioFile = AudioSegment.from_file(startAudioMP3, format=audioFormat)
+            startAudioFormat = path + language + "/Alles gerepareerd (NL) FINAL." + audioFormat
+            startAudioFile = AudioSegment.from_wav(startAudioFormat)
             startAudioLen = len(startAudioFile)/1000
 
         startAudio = play(startAudioFile)
@@ -197,13 +190,13 @@ def powerThread(thread=None):
             navigationAudio.stop()
 
         if language == 'English':
-            powerAudioMP3 = path + language + "/Power Repaired (Engels) FINAL." + audioFormat
-            powerAudioFile = AudioSegment.from_file(powerAudioMP3, format=audioFormat)
+            powerAudioFormat = path + language + "/Power Repaired (Engels) FINAL." + audioFormat
+            powerAudioFile = AudioSegment.from_wav(powerAudioFormat)
             powerAudioLen = len(powerAudioFile)/1000
 
         elif language == 'Dutch':
-            powerAudioMP3 = path + language + "/Stroom gerepareerd (NL) FINAL." + audioFormat
-            powerAudioFile = AudioSegment.from_file(powerAudioMP3, format=audioFormat)
+            powerAudioFormat = path + language + "/Stroom gerepareerd (NL) FINAL." + audioFormat
+            powerAudioFile = AudioSegment.from_wav(powerAudioFormat)
             powerAudioLen = len(powerAudioFile)/1000
 
         powerAudio = play(powerAudioFile)
@@ -237,13 +230,13 @@ def lifeSupportThread(thread=None):
             navigationAudio.stop()
 
         if language == 'English':
-            lifeSupportAudioMP3 = path + language + "/Life Support Repaired (Engels) FINAL." + audioFormat
-            lifeSupportAudioFile = AudioSegment.from_file(lifeSupportAudioMP3, format=audioFormat)
+            lifeSupportAudioFormat = path + language + "/Life Support Repaired (Engels) FINAL." + audioFormat
+            lifeSupportAudioFile = AudioSegment.from_wav(lifeSupportAudioFormat)
             lifeSupportAudioLen = len(lifeSupportAudioFile)/1000
 
         elif language == 'Dutch':
-            lifeSupportAudioMP3 = path + language + "/Zuurstof gerepareerd (NL) FINAL." + audioFormat
-            lifeSupportAudioFile = AudioSegment.from_file(lifeSupportAudioMP3, format=audioFormat)
+            lifeSupportAudioFormat = path + language + "/Zuurstof gerepareerd (NL) FINAL." + audioFormat
+            lifeSupportAudioFile = AudioSegment.from_wav(lifeSupportAudioFormat)
             lifeSupportAudioLen = len(lifeSupportAudioFile)/1000
 
         lifeSupportAudio = play(lifeSupportAudioFile)
@@ -276,13 +269,13 @@ def engineThread(thread=None):
             navigationAudio.stop()
 
         if language == 'English':
-            engineAudioMP3 = path + language + "/Engines Repaired (Engels) FINAL." + audioFormat
-            engineAudioFile = AudioSegment.from_file(engineAudioMP3, format=audioFormat)
+            engineAudioFormat = path + language + "/Engines Repaired (Engels) FINAL." + audioFormat
+            engineAudioFile = AudioSegment.from_wav(engineAudioFormat)
             engineAudioLen = len(engineAudioFile)/1000
 
         elif language == 'Dutch':
-            engineAudioMP3 = path + language + "/Motoren gerepareerd (NL) FINAL." + audioFormat
-            engineAudioFile = AudioSegment.from_file(engineAudioMP3, format=audioFormat)
+            engineAudioFormat = path + language + "/Motoren gerepareerd (NL) FINAL." + audioFormat
+            engineAudioFile = AudioSegment.from_wav(engineAudioFormat)
             engineAudioLen = len(engineAudioFile)/1000
 
         engineAudio = play(engineAudioFile)
@@ -316,13 +309,13 @@ def navigationThread(thread=None):
             engineAudio.stop()
 
         if language == 'English':
-            navigationAudioMP3 = path + language + "/Navigation Repaired (Engels) FINAL." + audioFormat
-            navigationAudioFile = AudioSegment.from_file(navigationAudioMP3, format=audioFormat)
+            navigationAudioFormat = path + language + "/Navigation Repaired (Engels) FINAL." + audioFormat
+            navigationAudioFile = AudioSegment.from_wav(navigationAudioFormat)
             navigationAudioLen = len(navigationAudioFile)/1000
 
         elif language == 'Dutch':
-            navigationAudioMP3 = path + language + "/Navigatie gerepareerd (NL) FINAL." + audioFormat
-            navigationAudioFile = AudioSegment.from_file(navigationAudioMP3, format=audioFormat)
+            navigationAudioFormat = path + language + "/Navigatie gerepareerd (NL) FINAL." + audioFormat
+            navigationAudioFile = AudioSegment.from_wav(navigationAudioFormat)
             navigationAudioLen = len(navigationAudioFile)/1000
 
         navigationAudio = play(navigationAudioFile)
