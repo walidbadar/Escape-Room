@@ -18,9 +18,10 @@ path = "/home/nathan41/Desktop/"
 language = "English"
 languagePriority = 0
 buttonDelay = 3000
+deadTimer = ''
 
 # Audio Varaibles
-audioFormat = "wav"
+audioFormat = 'wav'
 startAudio = ''
 powerAudio = ''
 lifeSupportAudio = ''
@@ -55,7 +56,7 @@ def setup():
 
 
 def selectEnglishThread(thread=None):
-    global language, languagePriority
+    global language, languagePriority, deadTimer
 
     GPIO.remove_event_detect(selectEnglishLanguage)
 
@@ -66,6 +67,8 @@ def selectEnglishThread(thread=None):
 
     elif GPIO.input(selectEnglishLanguage) == 0 and languagePriority == 1:
         pygame.mixer.music.stop()
+        if deadTimer != '':
+            deadTimer.cancel()
         languagePriority = 0
         GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
 
@@ -74,7 +77,7 @@ def selectEnglishThread(thread=None):
 
 
 def selectDutchThread(thread=None):
-    global language, languagePriority
+    global language, languagePriority, deadTimer
 
     GPIO.remove_event_detect(selectDutchLanguage)
 
@@ -85,6 +88,8 @@ def selectDutchThread(thread=None):
 
     elif GPIO.input(selectDutchLanguage) == 0 and languagePriority == 1:
         pygame.mixer.music.stop()
+        if deadTimer != '':
+            deadTimer.cancel()
         languagePriority = 0
         GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
 
@@ -93,7 +98,7 @@ def selectDutchThread(thread=None):
 
 
 def escapeRoomThread(thread=None):
-    global startTime, endTime, timeFlag
+    global startTime, endTime, timeFlag, deadTimer
 
     GPIO.remove_event_detect(escapeRoom)
 
@@ -116,7 +121,8 @@ def escapeRoomThread(thread=None):
 
     if GPIO.input(escapeRoom) == 1:
         print("Escape Room Started")
-        threading.Timer(3600, deadThread).start()
+        deadTimer = threading.Timer(3600, deadThread)
+        deadTimer.start()
 
         if language == 'English':
             pygame.mixer.music.load(path + language + "/Escape room Nathan (ENGELS) FINAL." + audioFormat)
