@@ -20,7 +20,7 @@ languagePriority = 0
 buttonDelay = 3000
 
 # Audio Varaibles
-escapeRoomAudio = ''
+audioFormat = "wav"
 startAudio = ''
 powerAudio = ''
 lifeSupportAudio = ''
@@ -44,7 +44,6 @@ def setup():
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
-    GPIO.cleanup()
     GPIO.setup(selectEnglishLanguage, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(selectDutchLanguage, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(escapeRoom, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -58,6 +57,8 @@ def setup():
 def selectEnglishThread(thread=None):
     global language, languagePriority
 
+    GPIO.remove_event_detect(selectEnglishLanguage)
+
     if GPIO.input(selectEnglishLanguage) == 1 and languagePriority == 0:
         language = 'English'
         languagePriority = 1
@@ -68,11 +69,14 @@ def selectEnglishThread(thread=None):
         languagePriority = 0
         GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
 
+    GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
     print(language)
 
 
 def selectDutchThread(thread=None):
     global language, languagePriority
+
+    GPIO.remove_event_detect(selectDutchLanguage)
 
     if GPIO.input(selectDutchLanguage) == 1 and languagePriority == 0:
         language = 'Dutch'
@@ -84,25 +88,28 @@ def selectDutchThread(thread=None):
         languagePriority = 0
         GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
 
+    GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
     print(language)
 
 
 def escapeRoomThread(thread=None):
     global startTime, endTime, timeFlag
 
+    GPIO.remove_event_detect(escapeRoom)
+
     def deadThread():
         if language == 'English':
             pygame.mixer.music.stop()
-            deadAudioMP3 = path + language + "/Escape room Nathan Dead (Engels) FINAL.mp3"
-            deadAudioFile = AudioSegment.from_file(deadAudioMP3, format="mp3")
+            deadAudioMP3 = path + language + "/Escape room Nathan Dead (Engels) FINAL." + audioFormat
+            deadAudioFile = AudioSegment.from_file(deadAudioMP3, format=audioFormat)
             deadAudioLen = len(deadAudioFile)/1000
             deadAudio = play(deadAudioFile)
             time.sleep(deadAudioLen)
 
         elif language == 'Dutch':
             pygame.mixer.music.stop()
-            deadAudioMP3 = path + language + "/Escape room Nathan Dood (NL) FINAL.mp3"
-            deadAudioFile = AudioSegment.from_file(deadAudioMP3, format="mp3")
+            deadAudioMP3 = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
+            deadAudioFile = AudioSegment.from_file(deadAudioMP3, format=audioFormat)
             deadAudioLen = len(deadAudioFile)/1000
             deadAudio = play(deadAudioFile)
             time.sleep(deadAudioLen)
@@ -112,16 +119,20 @@ def escapeRoomThread(thread=None):
         threading.Timer(3600, deadThread).start()
 
         if language == 'English':
-            pygame.mixer.music.load(path + language + "/Escape room Nathan (ENGELS) FINAL.mp3")
+            pygame.mixer.music.load(path + language + "/Escape room Nathan (ENGELS) FINAL." + audioFormat)
 
         elif language == 'Dutch':
-            pygame.mixer.music.load(path + language + "/Escape room Nathan (NL) FINAL.mp3")
+            pygame.mixer.music.load(path + language + "/Escape room Nathan (NL) FINAL." + audioFormat)
 
         pygame.mixer.music.play()
+
+    GPIO.add_event_detect(escapeRoom, GPIO.RISING, callback=escapeRoomThread, bouncetime=buttonDelay)
 
 
 def startThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
+
+    GPIO.remove_event_detect(start)
 
     if GPIO.input(start) == 1:
         print("All Systems Repaired")
@@ -140,13 +151,13 @@ def startThread(thread=None):
             navigationAudio.stop()
 
         if language == 'English':
-            startAudioMP3 = path + language + "/All Systems Repaired (Engels) FINAL.mp3"
-            startAudioFile = AudioSegment.from_file(startAudioMP3, format="mp3")
+            startAudioMP3 = path + language + "/All Systems Repaired (Engels) FINAL." + audioFormat
+            startAudioFile = AudioSegment.from_file(startAudioMP3, format=audioFormat)
             startAudioLen = len(startAudioFile)/1000
 
         elif language == 'Dutch':
-            startAudioMP3 = path + language + "/Alles gerepareerd (NL) FINAL.mp3"
-            startAudioFile = AudioSegment.from_file(startAudioMP3, format="mp3")
+            startAudioMP3 = path + language + "/Alles gerepareerd (NL) FINAL." + audioFormat
+            startAudioFile = AudioSegment.from_file(startAudioMP3, format=audioFormat)
             startAudioLen = len(startAudioFile)/1000
 
         startAudio = play(startAudioFile)
@@ -155,9 +166,13 @@ def startThread(thread=None):
         startAudio = ''
         pygame.mixer.music.unpause()
 
+    GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
+
 
 def powerThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
+
+    GPIO.remove_event_detect(power)
 
     if GPIO.input(power) == 1:
         print("Power Repaired")
@@ -176,13 +191,13 @@ def powerThread(thread=None):
             navigationAudio.stop()
 
         if language == 'English':
-            powerAudioMP3 = path + language + "/Power Repaired (Engels) FINAL.mp3"
-            powerAudioFile = AudioSegment.from_file(powerAudioMP3, format="mp3")
+            powerAudioMP3 = path + language + "/Power Repaired (Engels) FINAL." + audioFormat
+            powerAudioFile = AudioSegment.from_file(powerAudioMP3, format=audioFormat)
             powerAudioLen = len(powerAudioFile)/1000
 
         elif language == 'Dutch':
-            powerAudioMP3 = path + language + "/Stroom gerepareerd (NL) FINAL.mp3"
-            powerAudioFile = AudioSegment.from_file(powerAudioMP3, format="mp3")
+            powerAudioMP3 = path + language + "/Stroom gerepareerd (NL) FINAL." + audioFormat
+            powerAudioFile = AudioSegment.from_file(powerAudioMP3, format=audioFormat)
             powerAudioLen = len(powerAudioFile)/1000
 
         powerAudio = play(powerAudioFile)
@@ -191,9 +206,13 @@ def powerThread(thread=None):
         powerAudio = ''
         pygame.mixer.music.unpause()
 
+    GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=buttonDelay)
+
 
 def lifeSupportThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
+
+    GPIO.remove_event_detect(lifeSupport)
 
     if GPIO.input(lifeSupport) == 1:
         print("Life Support Repaired")
@@ -212,13 +231,13 @@ def lifeSupportThread(thread=None):
             navigationAudio.stop()
 
         if language == 'English':
-            lifeSupportAudioMP3 = path + language + "/Life Support Repaired (Engels) FINAL.mp3"
-            lifeSupportAudioFile = AudioSegment.from_file(lifeSupportAudioMP3, format="mp3")
+            lifeSupportAudioMP3 = path + language + "/Life Support Repaired (Engels) FINAL." + audioFormat
+            lifeSupportAudioFile = AudioSegment.from_file(lifeSupportAudioMP3, format=audioFormat)
             lifeSupportAudioLen = len(lifeSupportAudioFile)/1000
 
         elif language == 'Dutch':
-            lifeSupportAudioMP3 = path + language + "/Zuurstof gerepareerd (NL) FINAL.mp3"
-            lifeSupportAudioFile = AudioSegment.from_file(lifeSupportAudioMP3, format="mp3")
+            lifeSupportAudioMP3 = path + language + "/Zuurstof gerepareerd (NL) FINAL." + audioFormat
+            lifeSupportAudioFile = AudioSegment.from_file(lifeSupportAudioMP3, format=audioFormat)
             lifeSupportAudioLen = len(lifeSupportAudioFile)/1000
 
         lifeSupportAudio = play(lifeSupportAudioFile)
@@ -227,9 +246,12 @@ def lifeSupportThread(thread=None):
         lifeSupportAudio = ''
         pygame.mixer.music.unpause()
 
+    GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=buttonDelay)
 
 def engineThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
+
+    GPIO.remove_event_detect(engine)
 
     if GPIO.input(engine) == 1:
         print("Engine Repaired")
@@ -248,13 +270,13 @@ def engineThread(thread=None):
             navigationAudio.stop()
 
         if language == 'English':
-            engineAudioMP3 = path + language + "/Engines  Repaired (Engels) FINAL.mp3"
-            engineAudioFile = AudioSegment.from_file(engineAudioMP3, format="mp3")
+            engineAudioMP3 = path + language + "/Engines Repaired (Engels) FINAL." + audioFormat
+            engineAudioFile = AudioSegment.from_file(engineAudioMP3, format=audioFormat)
             engineAudioLen = len(engineAudioFile)/1000
 
         elif language == 'Dutch':
-            engineAudioMP3 = path + language + "/Motoren gerepareerd (NL) FINAL.mp3"
-            engineAudioFile = AudioSegment.from_file(engineAudioMP3, format="mp3")
+            engineAudioMP3 = path + language + "/Motoren gerepareerd (NL) FINAL." + audioFormat
+            engineAudioFile = AudioSegment.from_file(engineAudioMP3, format=audioFormat)
             engineAudioLen = len(engineAudioFile)/1000
 
         engineAudio = play(engineAudioFile)
@@ -263,9 +285,13 @@ def engineThread(thread=None):
         engineAudio = ''
         pygame.mixer.music.unpause()
 
+    GPIO.add_event_detect(engine, GPIO.RISING, callback=engineThread, bouncetime=buttonDelay)
+
 
 def navigationThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
+
+    GPIO.remove_event_detect(navigation)
 
     if GPIO.input(navigation) == 1:
         print("Navigation Repaired")
@@ -284,13 +310,13 @@ def navigationThread(thread=None):
             engineAudio.stop()
 
         if language == 'English':
-            navigationAudioMP3 = path + language + "/Navigation Repaired (Engels) FINAL.mp3"
-            navigationAudioFile = AudioSegment.from_file(navigationAudioMP3, format="mp3")
+            navigationAudioMP3 = path + language + "/Navigation Repaired (Engels) FINAL." + audioFormat
+            navigationAudioFile = AudioSegment.from_file(navigationAudioMP3, format=audioFormat)
             navigationAudioLen = len(navigationAudioFile)/1000
 
         elif language == 'Dutch':
-            navigationAudioMP3 = path + language + "/Navigatie gerepareerd (NL) FINAL.mp3"
-            navigationAudioFile = AudioSegment.from_file(navigationAudioMP3, format="mp3")
+            navigationAudioMP3 = path + language + "/Navigatie gerepareerd (NL) FINAL." + audioFormat
+            navigationAudioFile = AudioSegment.from_file(navigationAudioMP3, format=audioFormat)
             navigationAudioLen = len(navigationAudioFile)/1000
 
         navigationAudio = play(navigationAudioFile)
@@ -298,6 +324,8 @@ def navigationThread(thread=None):
         time.sleep(navigationAudioLen)
         navigationAudio = ''
         pygame.mixer.music.unpause()
+
+    GPIO.add_event_detect(navigation, GPIO.RISING, callback=navigationThread, bouncetime=buttonDelay)
 
 
 def loop():
