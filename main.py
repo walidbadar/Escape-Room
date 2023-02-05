@@ -13,7 +13,7 @@ endTime = 0
 timeFlag = 0
 path = "/home/nathan41/Desktop/"
 language = "English"
-buttonDelay = 3000
+buttonDelay = 1000
 deadTimer = ''
 
 # Audio Varaibles
