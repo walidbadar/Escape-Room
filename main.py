@@ -119,8 +119,6 @@ def escapeRoomThread(thread=None):
             time.sleep(deadAudioLen)
 
     deadTimer = threading.Timer(3600, deadThread)
-    deadTimer.start()
-
     print("Escape Room Started")
 
     if language == 'English':
