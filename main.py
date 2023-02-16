@@ -11,7 +11,7 @@ pygame.mixer.init()
 startTime = 0
 endTime = 0
 timeFlag = 0
-path = "/home/nathan41/Desktop/"
+path = "/home/pi/Desktop/"
 language = "English"
 buttonDelay = 3000
 deadTimer = ''
@@ -96,9 +96,9 @@ def selectDutchThread(thread=None):
 
     print(language)
 
+
 def escapeRoomThread(thread=None):
     global startTime, endTime, timeFlag, deadTimer
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
     def deadThread():
         if language == 'English':
@@ -135,9 +135,9 @@ def escapeRoomThread(thread=None):
         deadTimer.cancel()
         pygame.mixer.music.stop()
 
+
 def startThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
     if GPIO.input(start) == 1:
         print("All Systems Repaired")
@@ -169,12 +169,15 @@ def startThread(thread=None):
         time.sleep(startAudioLen)
         startAudio = ''
         pygame.mixer.music.unpause()
-        
+
         GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
+
+    else:
+        startAudio = ''
+
 
 def powerThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
     if GPIO.input(power) == 1:
         print("Power Repaired")
@@ -210,9 +213,12 @@ def powerThread(thread=None):
 
         GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=buttonDelay)
 
+    else:
+        powerAudio = ''
+
+
 def lifeSupportThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
     if GPIO.input(lifeSupport) == 1:
         print("Life Support Repaired")
@@ -247,9 +253,12 @@ def lifeSupportThread(thread=None):
 
         GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=buttonDelay)
 
+    else:
+        lifeSupportAudio = ''
+
+
 def engineThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
     if GPIO.input(engine) == 1:
         print("Engine Repaired")
@@ -285,9 +294,12 @@ def engineThread(thread=None):
 
         GPIO.add_event_detect(engine, GPIO.RISING, callback=engineThread, bouncetime=buttonDelay)
 
+    else:
+        engineAudio = ''
+
+
 def navigationThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
     if GPIO.input(navigation) == 1:
         print("Navigation Repaired")
@@ -322,9 +334,11 @@ def navigationThread(thread=None):
 
         GPIO.add_event_detect(navigation, GPIO.RISING, callback=navigationThread, bouncetime=buttonDelay)
 
-def loop():
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
+    else:
+        navigationAudio = ''
 
+
+def loop():
     GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(escapeRoom, GPIO.RISING, callback=escapeRoomThread, bouncetime=buttonDelay)
@@ -336,6 +350,7 @@ def loop():
 
     while True:
         pass
+
 
 if __name__ == '__main__':
     setup()
