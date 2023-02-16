@@ -11,13 +11,14 @@ pygame.mixer.init()
 startTime = 0
 endTime = 0
 timeFlag = 0
-path = "/home/nathan41/Desktop/"
+path = "/home/pi/Desktop/"
 language = "English"
-buttonDelay = 3000
+buttonDelay = 1000
 deadTimer = ''
 
 # Audio Varaibles
 audioFormat = 'wav'
+escapeRoomAudio = ''
 startAudio = ''
 powerAudio = ''
 lifeSupportAudio = ''
@@ -35,7 +36,7 @@ engine = 5
 navigation = 6
 
 # GPIO Detection
-# GPIO Detection
+startFlag = 0
 escapeRoomBtnPressed = 0
 startBtnPressed = 0
 powerBtnPressed = 0
@@ -61,14 +62,16 @@ def setup():
 
 
 def selectEnglishThread(thread=None):
-    global language, deadTimer
+    global startFlag, language, deadTimer
 
     if GPIO.input(selectEnglishLanguage) == 1:
+        startFlag = 1
         language = 'English'
         GPIO.remove_event_detect(selectDutchLanguage)
 
     elif GPIO.input(selectEnglishLanguage) == 0:
-        # pygame.mixer.music.stop()
+        startFlag = 0
+        pygame.mixer.music.stop()
         if deadTimer != '':
             deadTimer.cancel()
         GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
@@ -77,14 +80,16 @@ def selectEnglishThread(thread=None):
 
 
 def selectDutchThread(thread=None):
-    global language, deadTimer
+    global startFlag, language, deadTimer
 
     if GPIO.input(selectDutchLanguage) == 1:
+        startFlag = 1
         language = 'Dutch'
         GPIO.remove_event_detect(selectEnglishLanguage)
 
     elif GPIO.input(selectDutchLanguage) == 0:
-        # pygame.mixer.music.stop()
+        startFlag = 0
+        pygame.mixer.music.stop()
         if deadTimer != '':
             deadTimer.cancel()
         GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
@@ -98,7 +103,7 @@ def escapeRoomThread(thread=None):
 
     def deadThread():
         if language == 'English':
-            # pygame.mixer.music.stop()
+            pygame.mixer.music.stop()
             deadAudioFormat = path + language + "/Escape room Nathan Dead (Engels) FINAL." + audioFormat
             deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
             deadAudioLen = len(deadAudioFile) / 1000.0
@@ -106,28 +111,29 @@ def escapeRoomThread(thread=None):
             time.sleep(deadAudioLen)
 
         elif language == 'Dutch':
-            # pygame.mixer.music.stop()
+            pygame.mixer.music.stop()
             deadAudioFormat = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
             deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
             deadAudioLen = len(deadAudioFile) / 1000.0
             deadAudio = play(deadAudioFile)
             time.sleep(deadAudioLen)
 
-    escapeRoomBtnPressed = escapeRoomBtnPressed + 1
+    deadTimer = threading.Timer(3600, deadThread)
+    deadTimer.start()
 
-    if escapeRoomBtnPressed == 1:
-        print("Escape Room Started")
-        deadTimer = threading.Timer(3600, deadThread)
-        deadTimer.start()
+    print("Escape Room Started")
 
-        if language == 'English':
-            pygame.mixer.music.load(path + language + "/Escape room Nathan (ENGELS) FINAL.mp3")
+    if language == 'English':
+        pygame.mixer.music.load(path + language + "/Escape room Nathan (ENGELS) FINAL.mp3")
 
-        elif language == 'Dutch':
-            pygame.mixer.music.load(path + language + "/Escape room Nathan (NL) FINAL.mp3")
+    elif language == 'Dutch':
+        pygame.mixer.music.load(path + language + "/Escape room Nathan (NL) FINAL.mp3")
 
-        pygame.mixer.music.play()
-
+    if startFlag == 1:
+        if GPIO.input(escapeRoom) == 1:
+            pygame.mixer.music.play()
+    else:
+        pygame.mixer.music.stop()
 
 def startThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
@@ -137,7 +143,7 @@ def startThread(thread=None):
 
     if startBtnPressed == 1:
         print("All Systems Repaired")
-        # pygame.mixer.music.pause()
+        pygame.mixer.music.pause()
 
         if powerAudio != '':
             powerAudio.stop()
@@ -163,10 +169,7 @@ def startThread(thread=None):
         print(startAudioLen)
         time.sleep(startAudioLen)
         startAudio = ''
-        # pygame.mixer.music.unpause()
-
-    elif startBtnPressed > 1:
-        time.sleep(0.1)
+        pygame.mixer.music.unpause()
 
 def powerThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
@@ -176,7 +179,7 @@ def powerThread(thread=None):
 
     if powerBtnPressed == 1:
         print("Power Repaired")
-        # pygame.mixer.music.pause()
+        pygame.mixer.music.pause()
 
         if startAudio != '':
             startAudio.stop()
@@ -203,10 +206,8 @@ def powerThread(thread=None):
         print(powerAudioLen)
         time.sleep(powerAudioLen)
         powerAudio = ''
-        # pygame.mixer.music.unpause()
+        pygame.mixer.music.unpause()
 
-    elif powerBtnPressed > 1:
-        time.sleep(0.1)
 
 def lifeSupportThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
@@ -216,7 +217,7 @@ def lifeSupportThread(thread=None):
 
     if lifeSupportBtnPressed == 1:
         print("Life Support Repaired")
-        # pygame.mixer.music.pause()
+        pygame.mixer.music.pause()
 
         if startAudio != '':
             startAudio.stop()
@@ -242,10 +243,8 @@ def lifeSupportThread(thread=None):
         print(lifeSupportAudioLen)
         time.sleep(lifeSupportAudioLen)
         lifeSupportAudio = ''
-        # pygame.mixer.music.unpause()
+        pygame.mixer.music.unpause()
 
-    elif lifeSupportBtnPressed > 1:
-        time.sleep(0.1)
 
 def engineThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
@@ -255,7 +254,7 @@ def engineThread(thread=None):
 
     if engineBtnPressed == 1:
         print("Engine Repaired")
-        # pygame.mixer.music.pause()
+        pygame.mixer.music.pause()
 
         if startAudio != '':
             startAudio.stop()
@@ -282,10 +281,7 @@ def engineThread(thread=None):
         print(engineAudioLen)
         time.sleep(engineAudioLen)
         engineAudio = ''
-        # pygame.mixer.music.unpause()
-
-    elif engineBtnPressed > 1:
-        time.sleep(0.1)
+        pygame.mixer.music.unpause()
 
 
 def navigationThread(thread=None):
@@ -296,7 +292,7 @@ def navigationThread(thread=None):
 
     if navigationBtnPressed == 1:
         print("Navigation Repaired")
-        # pygame.mixer.music.pause()
+        pygame.mixer.music.pause()
 
         if startAudio != '':
             startAudio.stop()
@@ -322,10 +318,7 @@ def navigationThread(thread=None):
         print(navigationAudioLen)
         time.sleep(navigationAudioLen)
         navigationAudio = ''
-        # pygame.mixer.music.unpause()
-
-    elif navigationBtnPressed > 1:
-        time.sleep(0.1)
+        pygame.mixer.music.unpause()
 
 
 def loop():
@@ -333,13 +326,9 @@ def loop():
 
     GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(escapeRoom, GPIO.RISING, callback=escapeRoomThread, bouncetime=buttonDelay)
 
     while True:
-        if GPIO.input(escapeRoom) == 1:
-            escapeRoomThread()
-        else:
-            escapeRoomBtnPressed = 0
-
         if GPIO.input(start) == 1:
             startThread()
         else:
@@ -364,9 +353,7 @@ def loop():
             navigationThread()
         else:
             navigationBtnPressed = 0
-
         pass
-
 
 if __name__ == '__main__':
     setup()
