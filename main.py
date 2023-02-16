@@ -119,7 +119,7 @@ def escapeRoomThread(thread=None):
             time.sleep(deadAudioLen)
 
     deadTimer = threading.Timer(3600, deadThread)
-    deadTimer.start()
+    
 
     print("Escape Room Started")
 
@@ -131,8 +131,10 @@ def escapeRoomThread(thread=None):
 
     if startFlag == 1:
         if GPIO.input(escapeRoom) == 1:
+            deadTimer.start()
             pygame.mixer.music.play()
     else:
+        deadTimer.cancel()
         pygame.mixer.music.stop()
 
 def startThread(thread=None):
