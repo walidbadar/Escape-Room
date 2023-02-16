@@ -13,7 +13,7 @@ endTime = 0
 timeFlag = 0
 path = "/home/nathan41/Desktop/"
 language = "English"
-buttonDelay = 100
+buttonDelay = 3000
 deadTimer = ''
 
 # Audio Varaibles
@@ -96,7 +96,6 @@ def selectDutchThread(thread=None):
 
     print(language)
 
-
 def escapeRoomThread(thread=None):
     global startTime, endTime, timeFlag, deadTimer
     global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
@@ -129,10 +128,9 @@ def escapeRoomThread(thread=None):
         pygame.mixer.music.load(path + language + "/Escape room Nathan (NL) FINAL.mp3")
 
     if startFlag == 1 and GPIO.input(escapeRoom) == 1:
-        
         deadTimer.start()
         pygame.mixer.music.play()
-        print("playing")
+
     else:
         deadTimer.cancel()
         pygame.mixer.music.stop()
@@ -141,10 +139,9 @@ def startThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
     global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
-    startBtnPressed = startBtnPressed + 1
-
-    if startBtnPressed == 1:
+    if GPIO.input(start) == 1:
         print("All Systems Repaired")
+        GPIO.remove_event_detect(start)
         pygame.mixer.music.pause()
 
         if powerAudio != '':
@@ -172,15 +169,16 @@ def startThread(thread=None):
         time.sleep(startAudioLen)
         startAudio = ''
         pygame.mixer.music.unpause()
+        
+        GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
 
 def powerThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
     global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
-    powerBtnPressed = powerBtnPressed + 1
-
-    if powerBtnPressed == 1:
+    if GPIO.input(power) == 1:
         print("Power Repaired")
+        GPIO.remove_event_detect(power)
         pygame.mixer.music.pause()
 
         if startAudio != '':
@@ -210,15 +208,15 @@ def powerThread(thread=None):
         powerAudio = ''
         pygame.mixer.music.unpause()
 
+        GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=buttonDelay)
 
 def lifeSupportThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
     global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
-    lifeSupportBtnPressed = lifeSupportBtnPressed + 1
-
-    if lifeSupportBtnPressed == 1:
+    if GPIO.input(lifeSupport) == 1:
         print("Life Support Repaired")
+        GPIO.remove_event_detect(lifeSupport)
         pygame.mixer.music.pause()
 
         if startAudio != '':
@@ -247,15 +245,15 @@ def lifeSupportThread(thread=None):
         lifeSupportAudio = ''
         pygame.mixer.music.unpause()
 
+        GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=buttonDelay)
 
 def engineThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
     global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
-    engineBtnPressed = engineBtnPressed + 1
-
-    if engineBtnPressed == 1:
+    if GPIO.input(engine) == 1:
         print("Engine Repaired")
+        GPIO.remove_event_detect(engine)
         pygame.mixer.music.pause()
 
         if startAudio != '':
@@ -285,15 +283,15 @@ def engineThread(thread=None):
         engineAudio = ''
         pygame.mixer.music.unpause()
 
+        GPIO.add_event_detect(engine, GPIO.RISING, callback=engineThread, bouncetime=buttonDelay)
 
 def navigationThread(thread=None):
     global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
     global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
-    navigationBtnPressed = navigationBtnPressed + 1
-
-    if navigationBtnPressed == 1:
+    if GPIO.input(navigation) == 1:
         print("Navigation Repaired")
+        GPIO.remove_event_detect(navigation)
         pygame.mixer.music.pause()
 
         if startAudio != '':
@@ -322,6 +320,7 @@ def navigationThread(thread=None):
         navigationAudio = ''
         pygame.mixer.music.unpause()
 
+        GPIO.add_event_detect(navigation, GPIO.RISING, callback=navigationThread, bouncetime=buttonDelay)
 
 def loop():
     global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
@@ -329,32 +328,13 @@ def loop():
     GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(escapeRoom, GPIO.RISING, callback=escapeRoomThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(engine, GPIO.RISING, callback=engineThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(navigation, GPIO.RISING, callback=navigationThread, bouncetime=buttonDelay)
 
     while True:
-        if GPIO.input(start) == 1:
-            startThread()
-        else:
-            startBtnPressed = 0
-
-        if GPIO.input(power) == 1:
-            powerThread()
-        else:
-            powerBtnPressed = 0
-
-        if GPIO.input(lifeSupport) == 1:
-            lifeSupportThread()
-        else:
-            lifeSupportBtnPressed = 0
-
-        if GPIO.input(engine) == 1:
-            engineThread()
-        else:
-            engineBtnPressed = 0
-
-        if GPIO.input(navigation) == 1:
-            navigationThread()
-        else:
-            navigationBtnPressed = 0
         pass
 
 if __name__ == '__main__':
