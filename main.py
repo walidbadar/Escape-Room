@@ -11,7 +11,7 @@ pygame.mixer.init()
 startTime = 0
 endTime = 0
 timeFlag = 0
-path = "/home/nathan41/Desktop/"
+path = "/home/pi/Desktop/"
 language = "English"
 buttonDelay = 1000
 deadTimer = ''
@@ -119,7 +119,7 @@ def escapeRoomThread(thread=None):
             time.sleep(deadAudioLen)
 
     deadTimer = threading.Timer(3600, deadThread)
-    
+    deadTimer.start()
 
     print("Escape Room Started")
 
@@ -130,9 +130,8 @@ def escapeRoomThread(thread=None):
         pygame.mixer.music.load(path + language + "/Escape room Nathan (NL) FINAL.mp3")
 
     if startFlag == 1:
-        if GPIO.input(escapeRoom) == 1:
-            deadTimer.start()
-            pygame.mixer.music.play()
+        deadTimer.start()
+        pygame.mixer.music.play()
     else:
         deadTimer.cancel()
         pygame.mixer.music.stop()
