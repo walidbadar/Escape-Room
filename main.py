@@ -119,6 +119,7 @@ def escapeRoomThread(thread=None):
             time.sleep(deadAudioLen)
 
     deadTimer = threading.Timer(3600, deadThread)
+
     print("Escape Room Started")
 
     if language == 'English':
@@ -127,7 +128,7 @@ def escapeRoomThread(thread=None):
     elif language == 'Dutch':
         pygame.mixer.music.load(path + language + "/Escape room Nathan (NL) FINAL.mp3")
 
-    if startFlag == 1:
+    if startFlag == 1 and GPIO.input(escapeRoom) == 1:
         deadTimer.start()
         pygame.mixer.music.play()
     else:
@@ -325,7 +326,7 @@ def loop():
 
     GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
-    GPIO.add_event_detect(escapeRoom, GPIO.RISING, callback=escapeRoomThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(escapeRoom, GPIO.BOTH, callback=escapeRoomThread, bouncetime=buttonDelay)
 
     while True:
         if GPIO.input(start) == 1:
