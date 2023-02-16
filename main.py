@@ -11,7 +11,7 @@ pygame.mixer.init()
 startTime = 0
 endTime = 0
 timeFlag = 0
-path = "/home/pi/Desktop/"
+path = "/home/nathan41/Desktop/"
 language = "English"
 buttonDelay = 3000
 deadTimer = ''
