@@ -143,7 +143,7 @@ def startThread(thread=None):
     if GPIO.input(start) == 1:
         print("All Systems Repaired")
         GPIO.remove_event_detect(start)
-        pygame.mixer.music.pause()
+        
 
         if powerAudio != '':
             powerAudio.stop()
@@ -164,10 +164,8 @@ def startThread(thread=None):
             startAudioFormat = path + language + "/Alles gerepareerd (NL) FINAL." + audioFormat
 
         startAudioFile = AudioSegment.from_wav(startAudioFormat)
-        startAudioLen = len(startAudioFile) / 1000.0
+        pygame.mixer.music.pause()
         startAudio = play(startAudioFile)
-        print(startAudioLen)
-        time.sleep(startAudioLen)
         startAudio = ''
         pygame.mixer.music.unpause()
 
@@ -183,7 +181,6 @@ def powerThread(thread=None):
     if GPIO.input(power) == 1:
         print("Power Repaired")
         GPIO.remove_event_detect(power)
-        pygame.mixer.music.pause()
 
         if startAudio != '':
             startAudio.stop()
@@ -204,11 +201,8 @@ def powerThread(thread=None):
             powerAudioFormat = path + language + "/Stroom gerepareerd (NL) FINAL." + audioFormat
 
         powerAudioFile = AudioSegment.from_wav(powerAudioFormat)
-        powerAudioLen = len(powerAudioFile) / 1000.0
-
+        pygame.mixer.music.pause()
         powerAudio = play(powerAudioFile)
-        print(powerAudioLen)
-        time.sleep(powerAudioLen)
         powerAudio = ''
         pygame.mixer.music.unpause()
 
@@ -224,7 +218,6 @@ def lifeSupportThread(thread=None):
     if GPIO.input(lifeSupport) == 1:
         print("Life Support Repaired")
         GPIO.remove_event_detect(lifeSupport)
-        pygame.mixer.music.pause()
 
         if startAudio != '':
             startAudio.stop()
@@ -245,10 +238,8 @@ def lifeSupportThread(thread=None):
             lifeSupportAudioFormat = path + language + "/Zuurstof gerepareerd (NL) FINAL." + audioFormat
 
         lifeSupportAudioFile = AudioSegment.from_wav(lifeSupportAudioFormat)
-        lifeSupportAudioLen = len(lifeSupportAudioFile) / 1000.0
+        pygame.mixer.music.pause()
         lifeSupportAudio = play(lifeSupportAudioFile)
-        print(lifeSupportAudioLen)
-        time.sleep(lifeSupportAudioLen)
         lifeSupportAudio = ''
         pygame.mixer.music.unpause()
 
@@ -264,7 +255,6 @@ def engineThread(thread=None):
     if GPIO.input(engine) == 1:
         print("Engine Repaired")
         GPIO.remove_event_detect(engine)
-        pygame.mixer.music.pause()
 
         if startAudio != '':
             startAudio.stop()
@@ -285,11 +275,8 @@ def engineThread(thread=None):
             engineAudioFormat = path + language + "/Motoren gerepareerd (NL) FINAL." + audioFormat
 
         engineAudioFile = AudioSegment.from_wav(engineAudioFormat)
-        engineAudioLen = len(engineAudioFile) / 1000.0
-
+        pygame.mixer.music.pause()
         engineAudio = play(engineAudioFile)
-        print(engineAudioLen)
-        time.sleep(engineAudioLen)
         engineAudio = ''
         pygame.mixer.music.unpause()
 
@@ -305,7 +292,6 @@ def navigationThread(thread=None):
     if GPIO.input(navigation) == 1:
         print("Navigation Repaired")
         GPIO.remove_event_detect(navigation)
-        pygame.mixer.music.pause()
 
         if startAudio != '':
             startAudio.stop()
@@ -326,10 +312,8 @@ def navigationThread(thread=None):
             navigationAudioFormat = path + language + "/Navigatie gerepareerd (NL) FINAL." + audioFormat
 
         navigationAudioFile = AudioSegment.from_wav(navigationAudioFormat)
-        navigationAudioLen = len(navigationAudioFile) / 1000.0
+        pygame.mixer.music.pause()
         navigationAudio = play(navigationAudioFile)
-        print(navigationAudioLen)
-        time.sleep(navigationAudioLen)
         navigationAudio = ''
         pygame.mixer.music.unpause()
 
