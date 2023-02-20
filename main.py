@@ -154,7 +154,7 @@ def deadThread(thread=None):
         deadAudio = play(deadAudioFile)
         deadAudio = ''
 
-        GPIO.add_event_detect(dead, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
+        GPIO.add_event_detect(dead, GPIO.RISING, callback=deadThread, bouncetime=buttonDelay)
 
     else:
         deadAudio = ''
