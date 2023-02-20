@@ -105,17 +105,13 @@ def escapeRoomThread(thread=None):
             pygame.mixer.music.stop()
             deadAudioFormat = path + language + "/Escape room Nathan Dead (Engels) FINAL." + audioFormat
             deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
-            deadAudioLen = len(deadAudioFile) / 1000.0
             deadAudio = play(deadAudioFile)
-            time.sleep(deadAudioLen)
 
         elif language == 'Dutch':
             pygame.mixer.music.stop()
             deadAudioFormat = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
             deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
-            deadAudioLen = len(deadAudioFile) / 1000.0
             deadAudio = play(deadAudioFile)
-            time.sleep(deadAudioLen)
 
     deadTimer = threading.Timer(3600, deadThread)
 
@@ -143,7 +139,7 @@ def startThread(thread=None):
     if GPIO.input(start) == 1:
         print("All Systems Repaired")
         GPIO.remove_event_detect(start)
-        
+
 
         if powerAudio != '':
             powerAudio.stop()
