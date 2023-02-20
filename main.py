@@ -14,11 +14,12 @@ timeFlag = 0
 path = "/home/nathan41/Desktop/"
 language = "English"
 buttonDelay = 500
-deadTimer = ''
+doodTimer = ''
 
 # Audio Varaibles
 audioFormat = 'wav'
 escapeRoomAudio = ''
+deadAudio = ''
 startAudio = ''
 powerAudio = ''
 lifeSupportAudio = ''
@@ -29,6 +30,7 @@ navigationAudio = ''
 selectEnglishLanguage = 13
 selectDutchLanguage = 16
 escapeRoom = 19
+dead = 26
 start = 20
 power = 21
 lifeSupport = 12
@@ -96,24 +98,24 @@ def selectDutchThread(thread=None):
 
     print(language)
 
-def escapeRoomThread(thread=None):
-    global startTime, endTime, timeFlag, deadTimer
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
-    def deadThread():
+def escapeRoomThread(thread=None):
+    global startTime, endTime, timeFlag, doodTimer
+
+    def doodThread():
         if language == 'English':
             pygame.mixer.music.stop()
-            deadAudioFormat = path + language + "/Escape room Nathan Dead (Engels) FINAL." + audioFormat
-            deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
-            deadAudio = play(deadAudioFile)
+            doodAudioFormat = path + language + "/Escape room Nathan Dead (Engels) FINAL." + audioFormat
+            doodAudioFile = AudioSegment.from_wav(doodAudioFormat)
+            doodAudio = play(doodAudioFile)
 
         elif language == 'Dutch':
             pygame.mixer.music.stop()
-            deadAudioFormat = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
-            deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
-            deadAudio = play(deadAudioFile)
+            doodAudioFormat = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
+            doodAudioFile = AudioSegment.from_wav(doodAudioFormat)
+            doodAudio = play(doodAudioFile)
 
-    deadTimer = threading.Timer(3600, deadThread)
+    doodTimer = threading.Timer(3600, doodThread)
 
     print("Escape Room Started")
 
@@ -124,34 +126,46 @@ def escapeRoomThread(thread=None):
         pygame.mixer.music.load(path + language + "/Escape room Nathan (NL) FINAL.mp3")
 
     if startFlag == 1 and GPIO.input(escapeRoom) == 1:
-        deadTimer.start()
+        # doodTimer.start()
         pygame.mixer.music.play()
 
     else:
-        print ("Audio Stopped")
-        deadTimer.cancel()
+        print("Audio Stopped")
+        # doodTimer.cancel()
         pygame.mixer.music.stop()
 
+
+def deadThread(thread=None):
+    global deadAudio, startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
+
+    if GPIO.input(dead) == 1:
+        print("Playing Dead")
+        GPIO.remove_event_detect(dead)
+
+        if language == 'English':
+            deadAudioFormat = path + language + "/Escape room Nathan Dead (Engels) FINAL." + audioFormat
+
+        elif language == 'Dutch':
+            deadAudioFormat = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
+
+        deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
+        pygame.mixer.music.pause()
+        deadAudio = play(deadAudioFile)
+        deadAudio = ''
+        pygame.mixer.music.unpause()
+
+        GPIO.add_event_detect(dead, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
+
+    else:
+        deadAudio = ''
+
+
 def startThread(thread=None):
-    global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
+    global deadAudio, startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(start) == 1:
         print("All Systems Repaired")
         GPIO.remove_event_detect(start)
-
-
-        if powerAudio != '':
-            powerAudio.stop()
-
-        if lifeSupportAudio != '':
-            lifeSupportAudio.stop()
-
-        if engineAudio != '':
-            engineAudio.stop()
-
-        if navigationAudio != '':
-            navigationAudio.stop()
 
         if language == 'English':
             startAudioFormat = path + language + "/All Systems Repaired (Engels) FINAL." + audioFormat
@@ -170,25 +184,13 @@ def startThread(thread=None):
     else:
         startAudio = ''
 
+
 def powerThread(thread=None):
-    global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
+    global deadAudio, startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(power) == 1:
         print("Power Repaired")
         GPIO.remove_event_detect(power)
-
-        if startAudio != '':
-            startAudio.stop()
-
-        if lifeSupportAudio != '':
-            lifeSupportAudio.stop()
-
-        if engineAudio != '':
-            engineAudio.stop()
-
-        if navigationAudio != '':
-            navigationAudio.stop()
 
         if language == 'English':
             powerAudioFormat = path + language + "/Power Repaired (Engels) FINAL." + audioFormat
@@ -207,25 +209,13 @@ def powerThread(thread=None):
     else:
         powerAudio = ''
 
+
 def lifeSupportThread(thread=None):
-    global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
+    global deadAudio, startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(lifeSupport) == 1:
         print("Life Support Repaired")
         GPIO.remove_event_detect(lifeSupport)
-
-        if startAudio != '':
-            startAudio.stop()
-
-        if powerAudio != '':
-            powerAudio.stop()
-
-        if engineAudio != '':
-            engineAudio.stop()
-
-        if navigationAudio != '':
-            navigationAudio.stop()
 
         if language == 'English':
             lifeSupportAudioFormat = path + language + "/Life Support Repaired (Engels) FINAL." + audioFormat
@@ -244,25 +234,13 @@ def lifeSupportThread(thread=None):
     else:
         lifeSupportAudio = ''
 
+
 def engineThread(thread=None):
-    global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
+    global deadAudio, startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(engine) == 1:
         print("Engine Repaired")
         GPIO.remove_event_detect(engine)
-
-        if startAudio != '':
-            startAudio.stop()
-
-        if powerAudio != '':
-            powerAudio.stop()
-
-        if lifeSupportAudio != '':
-            lifeSupportAudio.stop()
-
-        if navigationAudio != '':
-            navigationAudio.stop()
 
         if language == 'English':
             engineAudioFormat = path + language + "/Engines Repaired (Engels) FINAL." + audioFormat
@@ -281,25 +259,13 @@ def engineThread(thread=None):
     else:
         engineAudio = ''
 
+
 def navigationThread(thread=None):
-    global startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
+    global deadAudio, startAudio, powerAudio, lifeSupportAudio, engineAudio, navigationAudio
 
     if GPIO.input(navigation) == 1:
         print("Navigation Repaired")
         GPIO.remove_event_detect(navigation)
-
-        if startAudio != '':
-            startAudio.stop()
-
-        if powerAudio != '':
-            powerAudio.stop()
-
-        if lifeSupportAudio != '':
-            lifeSupportAudio.stop()
-
-        if engineAudio != '':
-            engineAudio.stop()
 
         if language == 'English':
             navigationAudioFormat = path + language + "/Navigation Repaired (Engels) FINAL." + audioFormat
@@ -318,12 +284,12 @@ def navigationThread(thread=None):
     else:
         navigationAudio = ''
 
-def loop():
-    global escapeRoomBtnPressed, startBtnPressed, powerBtnPressed, lifeSupportBtnPressed, engineBtnPressed, navigationBtnPressed
 
+def loop():
     GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(escapeRoom, GPIO.BOTH, callback=escapeRoomThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(dead, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=buttonDelay)
@@ -332,6 +298,7 @@ def loop():
 
     while True:
         pass
+
 
 if __name__ == '__main__':
     setup()
