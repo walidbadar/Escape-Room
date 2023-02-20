@@ -56,6 +56,7 @@ def setup():
     GPIO.setup(selectEnglishLanguage, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(selectDutchLanguage, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(escapeRoom, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(dead, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(start, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(power, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(lifeSupport, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
