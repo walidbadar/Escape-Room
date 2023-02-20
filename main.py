@@ -14,7 +14,6 @@ timeFlag = 0
 path = "/home/nathan41/Desktop/"
 language = "English"
 buttonDelay = 500
-doodTimer = ''
 
 # Audio Varaibles
 audioFormat = 'wav'
@@ -65,7 +64,7 @@ def setup():
 
 
 def selectEnglishThread(thread=None):
-    global startFlag, language, deadTimer
+    global startFlag, language
 
     if GPIO.input(selectEnglishLanguage) == 1:
         startFlag = 1
@@ -75,15 +74,13 @@ def selectEnglishThread(thread=None):
     elif GPIO.input(selectEnglishLanguage) == 0:
         startFlag = 0
         pygame.mixer.music.stop()
-        if deadTimer != '':
-            deadTimer.cancel()
         GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
 
     print(language)
 
 
 def selectDutchThread(thread=None):
-    global startFlag, language, deadTimer
+    global startFlag, language
 
     if GPIO.input(selectDutchLanguage) == 1:
         startFlag = 1
@@ -93,30 +90,13 @@ def selectDutchThread(thread=None):
     elif GPIO.input(selectDutchLanguage) == 0:
         startFlag = 0
         pygame.mixer.music.stop()
-        if deadTimer != '':
-            deadTimer.cancel()
         GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
 
     print(language)
 
 
 def escapeRoomThread(thread=None):
-    global startTime, endTime, timeFlag, doodTimer
-
-    def doodThread():
-        if language == 'English':
-            pygame.mixer.music.stop()
-            doodAudioFormat = path + language + "/Escape room Nathan Dead (Engels) FINAL." + audioFormat
-            doodAudioFile = AudioSegment.from_wav(doodAudioFormat)
-            doodAudio = play(doodAudioFile)
-
-        elif language == 'Dutch':
-            pygame.mixer.music.stop()
-            doodAudioFormat = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
-            doodAudioFile = AudioSegment.from_wav(doodAudioFormat)
-            doodAudio = play(doodAudioFile)
-
-    doodTimer = threading.Timer(3600, doodThread)
+    global startTime, endTime, timeFlag
 
     print("Escape Room Started")
 
@@ -127,12 +107,10 @@ def escapeRoomThread(thread=None):
         pygame.mixer.music.load(path + language + "/Escape room Nathan (NL) FINAL.mp3")
 
     if startFlag == 1 and GPIO.input(escapeRoom) == 1:
-        # doodTimer.start()
         pygame.mixer.music.play()
 
     else:
         print("Audio Stopped")
-        # doodTimer.cancel()
         pygame.mixer.music.stop()
 
 
@@ -289,7 +267,7 @@ def loop():
     GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(escapeRoom, GPIO.BOTH, callback=escapeRoomThread, bouncetime=buttonDelay)
-    GPIO.add_event_detect(dead, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
+    GPIO.add_event_detect(dead, GPIO.RISING, callback=deadThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(start, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(power, GPIO.RISING, callback=powerThread, bouncetime=buttonDelay)
     GPIO.add_event_detect(lifeSupport, GPIO.RISING, callback=lifeSupportThread, bouncetime=buttonDelay)
