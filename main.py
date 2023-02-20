@@ -149,10 +149,9 @@ def deadThread(thread=None):
             deadAudioFormat = path + language + "/Escape room Nathan Dood (NL) FINAL." + audioFormat
 
         deadAudioFile = AudioSegment.from_wav(deadAudioFormat)
-        pygame.mixer.music.pause()
+        pygame.mixer.music.stop()
         deadAudio = play(deadAudioFile)
         deadAudio = ''
-        pygame.mixer.music.unpause()
 
         GPIO.add_event_detect(dead, GPIO.RISING, callback=startThread, bouncetime=buttonDelay)
 
