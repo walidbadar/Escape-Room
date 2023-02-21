@@ -76,7 +76,7 @@ def selectEnglishThread(thread=None):
         pygame.mixer.music.stop()
         try:
             GPIO.add_event_detect(selectDutchLanguage, GPIO.BOTH, callback=selectDutchThread, bouncetime=buttonDelay)
-        expect:
+        except:
             print("Button Debounce in GPIO 13")
     print(language)
 
@@ -94,7 +94,7 @@ def selectDutchThread(thread=None):
         pygame.mixer.music.stop()
         try:
             GPIO.add_event_detect(selectEnglishLanguage, GPIO.BOTH, callback=selectEnglishThread, bouncetime=buttonDelay)      
-        expect:
+        except:
             print("Button Debounce in GPIO 16")
             
     print(language)
