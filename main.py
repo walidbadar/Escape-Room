@@ -13,7 +13,7 @@ endTime = 0
 timeFlag = 0
 path = "/home/nathan41/Desktop/"
 language = "English"
-buttonDelay = 500
+buttonDelay = 100
 
 # Audio Varaibles
 audioFormat = 'wav'
