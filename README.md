@@ -1,5 +1,5 @@
 <h1 id="dependencies">Install </h1>
-<div class="snippet-clipboard-content notranslate position-relative overflow-auto" data-snippet-clipboard-copy-content="git clone https://github.com/walidbadar/nathan-Escape-Room.git"><pre class="notranslate"><code>git clone https://github.com/walidbadar/nathan-Escape-Room.git</code></pre></div>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto" data-snippet-clipboard-copy-content="git clone https://github.com/walidbadar/Escape-Room.git"><pre class="notranslate"><code>git clone https://github.com/walidbadar/Escape-Room.git</code></pre></div>
 
 <h1 id="dependencies">Python Dependencies</h1>
 <ul>
